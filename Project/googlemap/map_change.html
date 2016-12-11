@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_Sb91O6UYtRBOSX7EuJxnt79MlAYWpEM"></script>
+    <script type="text/javascript" src="../lib/d3/d3.v3.min.js"></script>
+    <style type="text/css">
+
+html, body, #map {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.stations, .stations svg {
+  position: absolute;
+}
+
+.stations svg {
+  width: 300px;
+  height: 40px;
+  padding-right: 100px;
+  font: 20px sans-serif;
+}
+
+.stations circle {
+  fill: brown;
+  stroke: black;
+  stroke-width: 1.5px;
+}
+#floating-panel {
+  position: absolute;
+  top: 640px;
+  left: 3%;
+  z-index: 5;
+  padding: 5px;
+  text-align: center;
+  font-family: 'Roboto','sans-serif';
+  line-height: 30px;
+  padding-left: 10px;
+}
+
+#floating-panel1 {
+  position: absolute;
+  top: 700px;
+  left: 3%;
+  z-index: 5;
+  padding: 5px;
+
+  text-align: center;
+  font-family: 'Roboto','sans-serif';
+  line-height: 30px;
+  padding-left: 10px;
+}
+#floating-panel2 {
+  position: absolute;
+  top: 670px;
+  left: 3%;
+  z-index: 5;
+  padding: 5px;
+  text-align: center;
+  font-family: 'Roboto','sans-serif';
+  line-height: 30px;
+  padding-left: 10px;
+}
+#floating-panel3 {
+  position: absolute;
+  top: 610px;
+  left: 3%;
+  z-index: 5;
+  padding: 5px;
+  text-align: center;
+  font-family: 'Roboto','sans-serif';
+  line-height: 30px;
+  padding-left: 10px;
+}
+.scrollFix {
+    line-height: 1.5;
+    overflow: hidden;
+    white-space: nowrap;
+}
+    </style>
+  </head>
+  <body>
+  	<div id="floating-panel3">
+	<select id = "myList3" onchange="dropdownChanged();">
+			   <option value = "1">2015 Jan</option>
+               <option value = "2">2015 Feb</option>
+               <option value = "3">2015 Mar</option>
+			   <option value = "4">2015 Apr</option>
+			   <option value = "5">2015 May</option>
+			   <option value = "6">2015 Jun</option>
+			   <option value = "7">2015 Jul</option>
+			   <option value = "8">2015 Aug</option>
+			   <option value = "9">2015 Sep</option>
+			   <option value = "10">2015 Oct</option>
+			   <option value = "11">2015 Nov</option>
+               <option value = "12" selected="selected">2015 December Till 2016 Jan</option>
+             </select>
+	 </div>
+	 <div id="floating-panel">
+      <select id="address">
+        <option value="Atlanta">Atlanta</option>
+      </select>
+      <input id="submit" type="button" value="Click">
+    </div>
+	<div id="floating-panel1">
+      <input id="click1" type="button" value="Go Back to US Map">
+    </div>
+	<div id="floating-panel2">
+      <input id="click2" type="button" value="Go Back to City Center">
+    </div>
+    <div id="map"></div>
+    <script type="text/javascript">
+
+
+var r; var longitude; var latitude; var soldprice; var name1; var rec;var tri;var date1; var infowindow;	var arr; var Markers=new Array(); var tri;var rest;var trip;
+//read data 
+var time; var Listdate; var id;
+  
+ d3.json("geo1.json",function(data){
+	//console.log(data);
+	longitude=new Array(data.length);
+	latitude=new Array(data.length);
+	soldprice=new Array(data.length);
+	year=new Array(data.length)
+	month=new Array(data.length)
+	Listdate=new Array(data.length)
+	
+	for(var value in data){
+		i=1
+		longitude[value]=data[value][i];
+		i++;
+		latitude[value]=data[value][i];
+		i++;
+		Listdate[value]=data[value][i];
+		i++;
+		soldprice[value]=data[value][i];
+		i++;
+		i++;
+		year[value]=data[value][i];
+		i++;
+		month[value]=data[value][i];
+	
+		
+	}
+		
+	console.log(month)
+ })
+ 
+	// Create the Google Map…
+var Status=0;
+var map = new google.maps.Map(document.getElementById('map'), {
+  zoom: 5,
+  center: new google.maps.LatLng(37.76487, -100.41948),
+  mapTypeId: google.maps.MapTypeId.TERRAIN
+});
+//create geocoder
+ var geocoder = new google.maps.Geocoder();
+document.getElementById('submit').addEventListener('click', function() {
+    clearMarkers();
+	geocodeAddress(geocoder, map);
+	Status=1;
+  });
+/*var name2="";
+for(var j=0;j<name1.length;j++){
+	if(j==name1.length-1){
+		name2+='<br>'+name1[j]+'</br>';
+	}else{
+	name2+='<br>'+name1[j]+', '+'</br>';
+	}
+}*/
+//listen to click event;
+document.getElementById('click1').addEventListener('click', function() {
+    clearMarkers();
+	if (infowindow) infowindow.close();
+	map.setZoom(5);
+	map.setCenter( new google.maps.LatLng(37.76487, -100.41948));
+  });
+  
+document.getElementById('click2').addEventListener('click', function() {
+    clearMarkers();
+	if (infowindow) infowindow.close();
+	geocodeAddress(geocoder,map);
+  });
+ var str15="";  var address;
+function geocodeAddress(geocoder, resultsMap) {
+   address = document.getElementById('address').value;
+ 
+ /* for(var value in rest){
+	if(value==address){
+		for(var i=0;i<rest[value].length;i++){
+			str15+='<p id='+i+' >'+'<b>'+rest[value][i]+'  </b></p>'
+		}
+		}}*/
+  var contentString1 = '<div id="content" class="scrollFix">' +
+	'<div id="siteNotice">'+
+	'</div>'+
+	'<h1 id="Heading" class="Heading">'+'Welcome to Listing world !</h1>'+
+	//'<p><b>Active Listing: </b></p>'+
+	'<div id="bodyContent">'+
+	//str15+
+	'</div>'
+	'</div>';
+  geocoder.geocode({'address': address}, function(results, status) {
+    if (status === google.maps.GeocoderStatus.OK) {
+      resultsMap.setCenter(results[0].geometry.location);
+	  resultsMap.setZoom(11);
+      var marker = new google.maps.Marker({
+        map: resultsMap,
+        position: results[0].geometry.location
+      });
+	  Markers.push(marker);
+	if (infowindow) infowindow.close();
+	infowindow = new google.maps.InfoWindow({
+		content: contentString1,
+		maxWidth: 1500
+		});
+	infowindow.open( map, marker );	  
+    } else {
+      alert('Geocode was not successful for the following reason: ' + status);
+    }
+  });
+}
+
+	
+
+//var contentString='Please select a month in the dropdown list';
+function dropdownChanged(){	
+	if(Status==1){
+		var index = document.getElementById("myList3").value;
+		clearMarkers();
+		addMarker(index);
+		geocoder.geocode({'address': address}, function(results) {
+			map.setCenter(results[0].geometry.location);
+			map.setZoom(11);
+		})	
+			
+		}else{
+		alert('PLEASE SPECIFY PLACE AND CLICK FIRST!');
+		}
+}
+
+
+
+function addMarker(index){
+    
+	for( var key in longitude ) {
+			console.log(key);
+            addWeatherMarker( key,index );
+        }
+	function addWeatherMarker( i,index ) {
+            // Creating marker
+/*
+		var str1=""; var str2=""; var str3=""; var str4=""; var str5="";var str6="";var str7="";var str8="";var str9="";var str10="";var str11="";var str12="";var str13=""; 
+		var l=0;var a=0;var b=0;var c=0;var d=0;var e=0;var f=0;var g=0;var h=0;var o=0;var p=0;var q=0;var s=0;
+		var st1="";var st2="";var st3="";var st4="";var st5="";var st6="";var st7="";var st8="";var st9="";var st10="";var st11="";var st12="";var st13="";
+		
+		if(Date.parse(Listdate[i])<Date.parse('2015-01-01')){
+			str13+='<b>'price'</b>'+soldprice[i][j]+'<br>';
+			
+		}else if((Date.parse(Listdate[i])>=Date.parse('2015-01-01'))&&(Date.parse(Listdate[i])<=Date.parse('2015-01-31'))  ){
+			str1+='<b>'+(a+1)+". "+'</b>'+rec[i][j]+'<br>';
+			
+	}else if((Date.parse(Listdate[i])>=Date.parse('2015-02-01'))&&(Date.parse(Listdate[i])<=Date.parse('2015-02-29'))  ){
+			str2+='<b>'+(b+1)+". "+'</b>'+rec[i][j]+'<br>';	
+			
+	}else if((Date.parse(Listdate[i])>=Date.parse('2015-03-01'))&&(Date.parse(Listdate[i])<=Date.parse('2015-03-31'))  ){
+			str3+='<b>'+(c+1)+". "+'</b>'+rec[i][j]+'<br>';	
+		
+	}else if((Date.parse(Listdate[i])>=Date.parse('2015-04-01'))&&(Date.parse(Listdate[i])<=Date.parse('2015-04-30'))){
+			str4+='<b>'+(d+1)+". "+'</b>'+rec[i][j]+'<br>';	
+			
+	}else if((Date.parse(Listdate[i])>=Date.parse('2015-05-01'))&&(Date.parse(Listdate[i])<=Date.parse('2015-05-31'))){
+			str5+='<b>'+(e+1)+". "+'</b>'+rec[i][j]+'<br>';	
+			
+	}else if((Date.parse(Listdate[i])>=Date.parse('2015-06-01'))&&(Date.parse(Listdate[i])<=Date.parse('2015-06-30'))){
+			str6+='<b>'+(f+1)+". "+'</b>'+rec[i][j]+'<br>';	
+			
+	}else if((Date.parse(Listdate[i])>=Date.parse('2015-07-01'))&&(Date.parse(Listdate[i])<=Date.parse('2015-07-31'))){
+			str7+='<b>'+(g+1)+". "+'</b>'+rec[i][j]+'<br>';	
+			
+	}else if((Date.parse(Listdate[i])>=Date.parse('2015-08-01'))&&(Date.parse(Listdate[i])<=Date.parse('2015-08-31'))){
+			str8+='<b>'+(h+1)+". "+'</b>'+rec[i][j]+'<br>';	
+			
+	}else if((Date.parse(Listdate[i])>=Date.parse('2015-09-01'))&&(Date.parse(Listdate[i])<=Date.parse('2015-09-30'))){
+			str9+='<b>'+(o+1)+". "+'</b>'+rec[i][j]+'<br>';	
+			
+	}else if((Date.parse(Listdate[i])>=Date.parse('2015-10-01'))&&(Date.parse(Listdate[i])<=Date.parse('2015-10-31'))){
+			str10+='<b>'+(p+1)+". "+'</b>'+rec[i][j]+'<br>';
+			
+	}else if((Date.parse(Listdate[i])>=Date.parse('2015-11-01'))&&(Date.parse(Listdate[i])<=Date.parse('2015-11-30'))){
+			str11+='<b>'+(q+1)+". "+'</b>'+rec[i][j]+'<br>';	
+			
+	}else{
+			str12+='<b>'+(s+1)+". "+'</b>'+rec[i][j]+'<br>';
+			
+	}
+		
+*/		
+
+		
+		
+
+		
+		var marker = new google.maps.Marker({
+			position: new google.maps.LatLng( latitude[i], longitude[i] ),
+			map: map,
+			animation: google.maps.Animation.DROP,
+			//title: name1[i]
+		});
+		Markers.push(marker);
+		google.maps.event.addListener( marker, 'click', function() {
+			map.setZoom(13);
+			if (infowindow) infowindow.close();
+			infowindow = new google.maps.InfoWindow({
+				content: "Hello World",
+				maxWidth: 800
+				});
+			infowindow.open( map, marker );
+			toggleBounce();
+		});
+		
+function toggleBounce() {
+  if (marker.getAnimation() !== null) {
+	marker.setAnimation(null);
+  } else {
+	marker.setAnimation(google.maps.Animation.BOUNCE);
+  }
+}		
+google.maps.event.addListener(marker,'dblclick',function(){
+	map.setZoom(5);
+	if (infowindow) infowindow.close();
+})
+}
+}
+
+function clearMarkers() {
+  for (var i = 0; i < Markers.length; i++) {
+	Markers[i].setMap(null);
+  }
+  Markers = [];
+}
+
+    </script>
+  </body>
+</html>

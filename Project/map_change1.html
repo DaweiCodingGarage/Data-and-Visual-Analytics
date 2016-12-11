@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
+    <script type="text/javascript" src="../lib/d3/googlemap.js"></script>
+    <script type="text/javascript" src="../lib/d3/d3.v3.min.js"></script>
+    <style type="text/css">
+
+html, body, #map {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.stations, .stations svg {
+  position: absolute;
+}
+
+.stations svg {
+  width: 300px;
+  height: 40px;
+  padding-right: 100px;
+  font: 20px sans-serif;
+}
+
+.stations circle {
+  fill: brown;
+  stroke: black;
+  stroke-width: 1.5px;
+}
+#floating-panel {
+  position: absolute;
+  top: 640px;
+  left: 3%;
+  z-index: 5;
+  padding: 5px;
+  text-align: center;
+  font-family: 'Roboto','sans-serif';
+  line-height: 30px;
+  padding-left: 10px;
+}
+
+#floating-panel1 {
+  position: absolute;
+  top: 700px;
+  left: 3%;
+  z-index: 5;
+  padding: 5px;
+
+  text-align: center;
+  font-family: 'Roboto','sans-serif';
+  line-height: 30px;
+  padding-left: 10px;
+}
+#floating-panel2 {
+  position: absolute;
+  top: 670px;
+  left: 3%;
+  z-index: 5;
+  padding: 5px;
+  text-align: center;
+  font-family: 'Roboto','sans-serif';
+  line-height: 30px;
+  padding-left: 10px;
+}
+#floating-panel3 {
+  position: absolute;
+  top: 610px;
+  left: 3%;
+  z-index: 5;
+  padding: 5px;
+  text-align: center;
+  font-family: 'Roboto','sans-serif';
+  line-height: 30px;
+  padding-left: 10px;
+}
+.scrollFix {
+    line-height: 1.5;
+    overflow: hidden;
+    white-space: nowrap;
+}
+    </style>
+  </head>
+  <body>
+  	<div id="floating-panel3">
+	<select id = "myList3" onchange="dropdownChanged();">
+			   <option value = "1">2014 Jan</option>
+               <option value = "2">2014 Feb</option>
+               <option value = "3">2014 Mar</option>
+			   <option value = "4">2014 Apr</option>
+			   <option value = "5">2014 May</option>
+			   <option value = "6">2014 Jun</option>
+			   <option value = "7">2014 Jul</option>
+			   <option value = "8">2014 Aug</option>
+			   <option value = "9">2014 Sep</option>
+			   <option value = "10">2014 Oct</option>
+			   <option value = "11">2014 Nov</option>
+               <option value = "12" selected="selected">2014 December Till 2015 Jan</option>
+             </select>
+	 </div>
+	 <div id="floating-panel">
+      <select id="address">
+        <option value="Las Vegas">Las Vegas</option>
+        <option value="Phoenix">Phoenix</option>
+        <option value="Madison">Madison</option>
+        <option value="Pittsburgh">Pittsburgh</option>
+        <option value="Charlotte">Charlotte</option>
+        <option value="Waterloo">Waterloo</option>
+        <option value="Montreal">Montreal</option>
+      </select>
+      <input id="submit" type="button" value="Click">
+    </div>
+	<div id="floating-panel1">
+      <input id="click1" type="button" value="Go Back to US Map">
+    </div>
+	<div id="floating-panel2">
+      <input id="click2" type="button" value="Go Back to City Center">
+    </div>
+    <div id="map"></div>
+    <script type="text/javascript">
+
+
+var r; var longitude; var latitude; var name1; var rec;var tri;var date1; var infowindow;	var arr; var Markers=new Array(); var tri;var rest;var trip;
+//read data
+d3.json("data1.json", function(data){
+	r= new Array(data.length);
+	longitude=new Array(data.length);
+	latitude=new Array(data.length);
+	name1=new Array(data.length);
+	rec=new Array();
+	date1=new Array();
+	tri=new Array();
+	var i=0;
+	console.log(data);
+	for(var value in data){
+		r[i]=data[value][2].length;
+		longitude[i]=data[value][0];
+		latitude[i]=data[value][1];
+		name1[i]=value;
+		rec[i]=new Array(data[value][2].length);
+		date1[i]=new Array(data[value][2].length);
+		tri[i]=new Array(data[value][2].length);
+		for(var j=0;j<data[value][2].length;j++){
+			var str="";
+			for(var k=0;k<=data[value][2][j]["recom"].length;k++){
+				if(k==0){str=str+data[value][2][j]["recom"][k];
+				}else if(k==data[value][2][j]["recom"].length){
+					str=str;//+' <b>'+data[value][2][j]["date"]+'</b>'; 
+					}else{
+				str=str+', '+data[value][2][j]["recom"][k];}
+			}
+			rec[i][j]=str;
+			date1[i][j]=data[value][2][j]["date"];
+			var str1="";
+			for(var m=0;m<data[value][2][j]["triplets"].length;m++){
+				if(data[value][2][j]["triplets"][m]!="nan" && data[value][2][j]["triplets"][m]!=""){
+					if(m==0){str1=str1+data[value][2][j]["triplets"][m];
+					}else{str1+=', '+data[value][2][j]["triplets"][m];}
+				}
+			}
+			tri[i][j]=str1;
+		}
+		
+		i=i+1;
+	}
+	console.log(rec);
+  });	
+  
+ d3.json("top50.json",function(data){
+	rest=new Array(7);
+	for(var value in data){
+		rest[value]=new Array(data[value].length);
+		for(var i=0;i<data[value].length;i++){
+			rest[value][i]=data[value][i];
+		}
+	
+	}
+	console.log(rest);
+ 
+ })
+	// Create the Google Map…
+var Status=0;
+var map = new google.maps.Map(document.getElementById('map'), {
+  zoom: 5,
+  center: new google.maps.LatLng(37.76487, -100.41948),
+  mapTypeId: google.maps.MapTypeId.TERRAIN
+});
+//create geocoder
+ var geocoder = new google.maps.Geocoder();
+document.getElementById('submit').addEventListener('click', function() {
+    clearMarkers();
+	geocodeAddress(geocoder, map);
+	Status=1;
+  });
+/*var name2="";
+for(var j=0;j<name1.length;j++){
+	if(j==name1.length-1){
+		name2+='<br>'+name1[j]+'</br>';
+	}else{
+	name2+='<br>'+name1[j]+', '+'</br>';
+	}
+}*/
+//listen to click event;
+document.getElementById('click1').addEventListener('click', function() {
+    clearMarkers();
+	if (infowindow) infowindow.close();
+	map.setZoom(5);
+	map.setCenter( new google.maps.LatLng(36.76487, -100.41948));
+  });
+  
+document.getElementById('click2').addEventListener('click', function() {
+    clearMarkers();
+	if (infowindow) infowindow.close();
+	geocodeAddress(geocoder,map);
+  });
+ var str15="";  var address;
+function geocodeAddress(geocoder, resultsMap) {
+   address = document.getElementById('address').value;
+ 
+ /* for(var value in rest){
+	if(value==address){
+		for(var i=0;i<rest[value].length;i++){
+			str15+='<p id='+i+' >'+'<b>'+rest[value][i]+'  </b></p>'
+		}
+		}}*/
+  var contentString1 = '<div id="content" class="scrollFix">' +
+	'<div id="siteNotice">'+
+	'</div>'+
+	'<h1 id="Heading" class="Heading">'+'Welcome to '+address+' !</h1>'+
+	//'<p><b>Top Restaurants: </b></p>'+
+	'<div id="bodyContent">'+
+	//str15+
+	'</div>'
+	'</div>';
+  geocoder.geocode({'address': address}, function(results, status) {
+    if (status === google.maps.GeocoderStatus.OK) {
+      resultsMap.setCenter(results[0].geometry.location);
+	  resultsMap.setZoom(11);
+      var marker = new google.maps.Marker({
+        map: resultsMap,
+        position: results[0].geometry.location
+      });
+	  Markers.push(marker);
+	if (infowindow) infowindow.close();
+	infowindow = new google.maps.InfoWindow({
+		content: contentString1,
+		maxWidth: 1500
+		});
+	infowindow.open( map, marker );	  
+    } else {
+      alert('Geocode was not successful for the following reason: ' + status);
+    }
+  });
+}
+
+	
+
+//var contentString='Please select a month in the dropdown list';
+function dropdownChanged(){	
+	if(Status==1){
+		var index = document.getElementById("myList3").value;
+		clearMarkers();
+		addMarker(index);
+		geocoder.geocode({'address': address}, function(results) {
+			map.setCenter(results[0].geometry.location);
+			map.setZoom(11);
+		})	
+			
+		}else{
+		alert('PLEASE SPECIFY PLACE AND CLICK FIRST!');
+		}
+}
+
+function mode(array)
+{
+    if(array.length == 0)
+    	return null;
+    var modeMap = {};
+    var maxEl = array[0], maxCount = 1;
+    for(var i = 0; i < array.length; i++)
+    {
+    	var el = array[i];
+	if(el!=""){
+    	if(modeMap[el] == null)
+    		modeMap[el] = 1;
+    	else
+    		modeMap[el]++;	
+    	if(modeMap[el] > maxCount)
+    	{
+    		maxEl = el;
+    		maxCount = modeMap[el];
+    	}
+    }
+	}
+    return maxEl;
+	
+}	
+
+function addMarker(index){
+    
+	for( var i = 0;  i < r.length;  i++ ) {
+            addWeatherMarker( i,index );
+        }
+	function addWeatherMarker( i,index ) {
+            // Creating marker
+
+		var str1=""; var str2=""; var str3=""; var str4=""; var str5="";var str6="";var str7="";var str8="";var str9="";var str10="";var str11="";var str12="";var str13=""; 
+		var l=0;var a=0;var b=0;var c=0;var d=0;var e=0;var f=0;var g=0;var h=0;var o=0;var p=0;var q=0;var s=0;
+		var st1="";var st2="";var st3="";var st4="";var st5="";var st6="";var st7="";var st8="";var st9="";var st10="";var st11="";var st12="";var st13="";
+		for(var j=0;j<rec[i].length;j++){
+			if(Date.parse(date1[i][j])<Date.parse('2014-01-01')){
+				str13+='<b>'+(l+1)+". "+'</b>'+rec[i][j]+'<br>';
+				if(tri[i][j]!=""){
+					if(st13==""){st13+=tri[i][j];
+					}else{st13+=", "+tri[i][j];}
+				}
+				l=l+1;
+			}else if((Date.parse(date1[i][j])>=Date.parse('2014-01-01'))&&(Date.parse(date1[i][j])<=Date.parse('2014-01-31'))  ){
+				str1+='<b>'+(a+1)+". "+'</b>'+rec[i][j]+'<br>';
+				if(tri[i][j]!=""){
+					if(st1==""){st1+=tri[i][j];
+					}else{st1+=", "+tri[i][j];}	
+				}					
+				a=a+1;
+		}else if((Date.parse(date1[i][j])>=Date.parse('2014-02-01'))&&(Date.parse(date1[i][j])<=Date.parse('2014-02-29'))  ){
+				str2+='<b>'+(b+1)+". "+'</b>'+rec[i][j]+'<br>';	
+				if(tri[i][j]!=""){
+					if(st2==""){st2+=tri[i][j];
+					}else{st2+=", "+tri[i][j];}
+				}
+				b=b+1;
+		}else if((Date.parse(date1[i][j])>=Date.parse('2014-03-01'))&&(Date.parse(date1[i][j])<=Date.parse('2014-03-31'))  ){
+				str3+='<b>'+(c+1)+". "+'</b>'+rec[i][j]+'<br>';	
+				if(tri[i][j]!=""){
+					if(st3==""){st3+=tri[i][j];
+					}else{st3+=", "+tri[i][j];}
+				}
+				c=c+1;
+		}else if((Date.parse(date1[i][j])>=Date.parse('2014-04-01'))&&(Date.parse(date1[i][j])<=Date.parse('2014-04-30'))){
+				str4+='<b>'+(d+1)+". "+'</b>'+rec[i][j]+'<br>';	
+				if(tri[i][j]!=""){
+					if(st4==""){st4+=tri[i][j];
+					}else{st4+=", "+tri[i][j];}
+				}
+				d=d+1;
+		}else if((Date.parse(date1[i][j])>=Date.parse('2014-05-01'))&&(Date.parse(date1[i][j])<=Date.parse('2014-05-31'))){
+				str5+='<b>'+(e+1)+". "+'</b>'+rec[i][j]+'<br>';	
+				if(tri[i][j]!=""){
+					if(st5==""){st5+=tri[i][j];
+					}else{st5+=", "+tri[i][j];}
+				}
+				e=e+1;
+		}else if((Date.parse(date1[i][j])>=Date.parse('2014-06-01'))&&(Date.parse(date1[i][j])<=Date.parse('2014-06-30'))){
+				str6+='<b>'+(f+1)+". "+'</b>'+rec[i][j]+'<br>';	
+				if(tri[i][j]!=""){
+					if(st6==""){st6+=tri[i][j];
+					}else{st6+=", "+tri[i][j];}
+				}
+				f=f+1;
+		}else if((Date.parse(date1[i][j])>=Date.parse('2014-07-01'))&&(Date.parse(date1[i][j])<=Date.parse('2014-07-31'))){
+				str7+='<b>'+(g+1)+". "+'</b>'+rec[i][j]+'<br>';	
+				if(tri[i][j]!=""){
+					if(st7==""){st7+=tri[i][j];
+					}else{st7+=", "+tri[i][j];}
+				}
+				g=g+1;
+		}else if((Date.parse(date1[i][j])>=Date.parse('2014-08-01'))&&(Date.parse(date1[i][j])<=Date.parse('2014-08-31'))){
+				str8+='<b>'+(h+1)+". "+'</b>'+rec[i][j]+'<br>';	
+				if(tri[i][j]!=""){	
+					if(st8==""){st8+=tri[i][j];
+					}else{st8+=", "+tri[i][j];}
+				}
+				h=h+1;
+		}else if((Date.parse(date1[i][j])>=Date.parse('2014-09-01'))&&(Date.parse(date1[i][j])<=Date.parse('2014-09-30'))){
+				str9+='<b>'+(o+1)+". "+'</b>'+rec[i][j]+'<br>';	
+				if(tri[i][j]!=""){	
+					if(st9==""){st9+=tri[i][j];
+					}else{st9+=", "+tri[i][j];}
+				}
+				o=o+1;
+		}else if((Date.parse(date1[i][j])>=Date.parse('2014-10-01'))&&(Date.parse(date1[i][j])<=Date.parse('2014-10-31'))){
+				str10+='<b>'+(p+1)+". "+'</b>'+rec[i][j]+'<br>';
+				if(tri[i][j]!=""){	
+					if(st10==""){st10+=tri[i][j];
+					}else{st10+=", "+tri[i][j];}				
+				}
+				p=p+1;
+		}else if((Date.parse(date1[i][j])>=Date.parse('2014-11-01'))&&(Date.parse(date1[i][j])<=Date.parse('2014-11-30'))){
+				str11+='<b>'+(q+1)+". "+'</b>'+rec[i][j]+'<br>';	
+				if(tri[i][j]!=""){	
+					if(st11==""){st11+=tri[i][j];
+					}else{st11+=", "+tri[i][j];}
+				}
+				q=q+1;
+		}else{
+				str12+='<b>'+(s+1)+". "+'</b>'+rec[i][j]+'<br>';
+				if(tri[i][j]!=""){	
+					if(st12==""){st12+=tri[i][j];
+					}else{st12+=", "+tri[i][j];}				
+				}
+				s=s+1;
+		}
+		}
+		arr=new Array(13);
+		trip=new Array(13);
+		arr[0]=str1; arr[1]=str2; arr[2]=str3; arr[3]=str4; arr[4]=str5; arr[5]=str6; arr[6]=str7; arr[7]=str8; arr[8]=str9; arr[9]=str10; arr[10]=str11; arr[11]=str12; arr[12]=str13;
+		trip[0]=st1; trip[1]=st2; trip[2]=st3; trip[3]=st4; trip[4]=st5; trip[5]=st6; trip[6]=st7; trip[7]=st8; trip[8]=st9; trip[9]=st10; trip[10]=st11; trip[11]=st12; trip[12]=st13;  
+		var words = arr[index-1].split(/\b\s+(?!$)/);
+
+		
+		 var word; var freq1="";
+		for(var k=0;k<5;k++){
+			var ind=0;
+			word=mode(words);
+			if(word!=null){
+			var w=word.replace(/<\/?[^>]+(>|$)/g, "");
+			if(k<4){
+				freq1+=w+', ';}
+			else{
+				freq1+=w;
+			}
+			while(ind>=0){
+				ind=words.indexOf(word);
+				if (ind > -1) {
+					words.splice(ind, 1);
+				}
+			
+			}}else{
+			freq1="";}
+		}
+
+	
+		var contentString = '<div id="content">'+
+      '<div id="siteNotice">'+
+      '</div>'+
+      '<h1 id="firstHeading" class="firstHeading">'+name1[i]+'</h1>'+
+	  '<p><b>Keyword: '+freq1+'</b></p>'+
+	  '<p><b>Triplets: '+trip[index-1]+'</b></p>'+
+      '<div id="bodyContent">'+
+      '<p><b>Recommendations Based on Reviews</b>'+'<br>' +
+      ' '+arr[index-1]+'</p>'+
+      '</div>'+
+      '</div>';	
+
+		
+		var marker = new google.maps.Marker({
+			position: new google.maps.LatLng( latitude[i], longitude[i] ),
+			map: map,
+			animation: google.maps.Animation.DROP,
+			title: name1[i]
+		});
+		Markers.push(marker);
+		google.maps.event.addListener( marker, 'click', function() {
+			map.setZoom(13);
+			if (infowindow) infowindow.close();
+			infowindow = new google.maps.InfoWindow({
+				content: contentString,
+				maxWidth: 800
+				});
+			infowindow.open( map, marker );
+			toggleBounce();
+		});
+		
+function toggleBounce() {
+  if (marker.getAnimation() !== null) {
+	marker.setAnimation(null);
+  } else {
+	marker.setAnimation(google.maps.Animation.BOUNCE);
+  }
+}		
+google.maps.event.addListener(marker,'dblclick',function(){
+	map.setZoom(5);
+	if (infowindow) infowindow.close();
+})
+}
+}
+
+function clearMarkers() {
+  for (var i = 0; i < Markers.length; i++) {
+	Markers[i].setMap(null);
+  }
+  Markers = [];
+}
+
+    </script>
+  </body>
+</html>

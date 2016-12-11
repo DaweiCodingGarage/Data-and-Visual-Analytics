@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+body {
+  font: 10px sans-serif;
+}
+
+.label {
+  font-weight: bold;
+}
+
+.tile {
+  shape-rendering: crispEdges;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+</style>
+<body>
+<script type="text/javascript" src="../lib/d3/d3.v3.js"></script>
+<script>
+
+var margin = {top: 20, right: 90, bottom: 30, left: 50},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var weekday = new Array(7);
+weekday[0]=  "Sunday";
+weekday[1] = "Monday";
+weekday[2] = "Tuesday";
+weekday[3] = "Wednesday";
+weekday[4] = "Thursday";
+weekday[5] = "Friday";
+weekday[6] = "Saturday";
+
+
+var x = d3.scale.linear().range([0, width]),
+    y = d3.scale.linear().range([height, 0]),
+	z = d3.scale.linear().range(["white", "steelblue"]);
+
+
+var xStep = 1,
+    yStep = 10;
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+d3.json("day_heatmap.json", function(error, buckets) {
+  if (error) throw error;
+  var b=new Array(37);
+  var aValue=new Array(259);
+  
+  //create array of values
+  buckets.forEach(function(d,i) {
+    d.key = +d.key;
+	b[i]=d.key;
+	var h=0;
+	for(var j=0;j<7;j++){
+	  aValue[37*j+i]=d.values[h];
+	  h=h+1;}
+	});
+ 
+	//Create array of keys
+  var aKey=new Array(259);
+  var j=0;
+   for(var i=0;i<259;i++){
+		 aKey[i]=b[j];
+		 j=j+1;
+		 j=j%37;}
+ 
+  //Create array of days
+  var aHour=new Array(259);
+	var i=0;
+	for(var j=0;j<7;j++){
+		for(var h=0;h<37;h++){
+			aHour[i]=j;
+			i=i+1;}}
+	console.log(aValue)
+	console.log(aHour)
+	console.log(aKey)
+  // Compute the scale domains.
+  x.domain(d3.extent(aHour));
+  y.domain(d3.extent(aKey));
+  z.domain(d3.extent(aValue));
+
+  // Extend the x- and y-domain to fit the last bucket.
+  // For example, the y-bucket 3200 corresponds to values [3200, 3300].
+ x.domain([x.domain()[0], +x.domain()[1] + xStep]);  
+ y.domain([y.domain()[0], y.domain()[1] + yStep]);
+
+  // Display the tiles for each non-zero bucket.
+  // See http://bl.ocks.org/3074470 for an alternative implementation.
+
+	svg.selectAll(".tile")
+      .data(aHour)
+    .enter().append("rect")
+      .attr("class", "tile")
+      .attr("x", function(d,i){return x(aHour[i]); })	
+      .attr("y", function(d,i){return y(aKey[i]);})
+      .attr("width", x(xStep) - x(0))
+      .attr("height",  y(0) - y(yStep))
+      .style("fill", function(d,i){return z(aValue[i]);});
+	  
+  // Add a legend for the color values.
+  var legend = svg.selectAll(".legend")
+      .data(z.ticks(6).slice(1).reverse())
+    .enter().append("g")
+      .attr("class", "legend")
+      .attr("transform", function(d, i) { return "translate(" + (width + 20) + "," + (20 + i * 20) + ")"; });
+
+  legend.append("rect")
+      .attr("width", 20)
+      .attr("height", 20)
+      .style("fill", z);
+
+  legend.append("text")
+      .attr("x", 26)
+      .attr("y", 10)
+      .attr("dy", ".35em")
+      .text(String);
+
+  svg.append("text")
+      .attr("class", "label")
+      .attr("x", width + 20)
+      .attr("y", 10)
+      .attr("dy", ".35em")
+      .text("Glucose");
+
+  // Add an x-axis with label.
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.svg.axis().scale(x).ticks(7).tickFormat(function(d,i){if(d==i){return weekday[i]}}).orient("bottom"))
+    .append("text")
+      .attr("class", "label")
+      .attr("x", width)
+      .attr("y", -6)
+      .attr("text-anchor", "end")
+      .text("day");
+
+  // Add a y-axis with label.
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(d3.svg.axis().scale(y).orient("left"))
+    .append("text")
+      .attr("class", "label")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .attr("text-anchor", "end")
+      .attr("transform", "rotate(-90)")
+      .text("Keys");
+});
+
+</script>

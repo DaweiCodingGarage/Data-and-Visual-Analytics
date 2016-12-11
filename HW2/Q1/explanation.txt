@@ -1,0 +1,4 @@
+a. According to the two scatterplots, we could see that the scatter plot based on petalLength and petalWidth separates the classes more appropriately. 
+The same species of iris kind of cluster together in their separate areas, which are easier for us to identify.
+
+c.I used 4 scales, pow,log,sqrt,linear, Among these four scale,pow scale works better because data points are more stretch out that way, maybe easier to see the difference.

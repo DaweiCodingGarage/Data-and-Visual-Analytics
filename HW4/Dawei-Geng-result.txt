@@ -1,0 +1,1 @@
+accuracy: 0.7878accuracy: 0.8082accuracy: 0.7796accuracy: 0.7694accuracy: 0.7755accuracy: 0.7857accuracy: 0.7939accuracy: 0.7714accuracy: 0.7812accuracy: 0.7832mean of accuracy: 0.7836

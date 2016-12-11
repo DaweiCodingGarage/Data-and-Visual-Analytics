@@ -1,0 +1,1 @@
+My code uses part of the skeleton. One could directly run the code as you would do with the skeleton code

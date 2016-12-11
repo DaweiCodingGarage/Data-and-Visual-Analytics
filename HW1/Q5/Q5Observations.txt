@@ -1,0 +1,3 @@
+1. I tried every clustering function on event and venue and found that numbers of categories drop significantly, but there still exist categories that have similar forms but not being merged.
+3. ID is ordinal data and venue is nominal data.
+5. I used numeric facet for dish_count and found that the data is heavily skewed, therefore I took the log for the data, found there are 41 errors, which includes blank and numbers equal zero, hence delete them. In this way, we clean the data that is questionable.

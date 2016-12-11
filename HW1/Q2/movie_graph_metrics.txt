@@ -1,0 +1,11 @@
+different movies may be different:
+1. Eccentricity: how far a movie away from the center.More center the movie, more connection it would have.
+2. Betweenness centrality is an indicator of a movie's centrality in the map. A movie with high betweenness centrality has a large influence on the other movie through the map.
+3. Pagerank gives us the importance of certain movie.
+
+Five highest pagerank movies
+76341
+The Wolf of Wall Street
+241554
+Mission:Impossible
+The Purge: Anarchy

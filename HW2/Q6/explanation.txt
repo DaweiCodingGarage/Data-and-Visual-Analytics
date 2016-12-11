@@ -1,0 +1,2 @@
+I made a world map to show the origin of the refugees(red),and use arc to point to the European Country(blue) that each refugee origin country would mostly go to correspondingly.
+There are bubbles in countries that refugees come from, mouse on that bubble, we could see some statistics of the refuguees regarding age struction and sex. 

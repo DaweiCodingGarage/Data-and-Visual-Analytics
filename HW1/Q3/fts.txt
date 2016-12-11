@@ -1,0 +1,3 @@
+FTS performance is faster than SQL LIKE query because it doesn't have to scan the whole table in order to find certain terms.
+FTS only returns exactly the terms itself, While SQL like query return all the terms that contain the tokens.
+However, FTS cost more disk volume compared to sql like query and takes longer to populate the table.

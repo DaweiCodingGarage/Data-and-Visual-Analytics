@@ -1,0 +1,4 @@
+1. Glucose Readings are high when keys are lower than 200,especially keys between 50 to 150; almost 0 when keys are over 250.
+2. From the Hour heatmap, we could see there are more glucose reading records shown on the heatmap in the midnight(time assumption).
+3. From the day heatmap, we could see glucose readings are similar.
+

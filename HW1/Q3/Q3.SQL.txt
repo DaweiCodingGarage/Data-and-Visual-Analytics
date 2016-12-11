@@ -1,0 +1,78 @@
+.open E:/A+GTCLASS/CSE6242/Q3/rt.db
+create table movies(id integer,name text,score integer);
+.separator ","
+.import E:/A+GTCLASS/CSE6242/Q3/movie.csv movies
+create table moviecast(movie_id integer,cast_id integer,cast_name text);
+.import E:/A+GTCLASS/CSE6242/Q3/moviecast.csv moviecast
+
+
+create index movies_name_index on movies(name);
+create index movies_score_index on movies(score);
+
+select null;
+
+
+select avg(score) as average_score from movies where score>=1;
+
+select null;
+
+
+select id, name,score from movies where score>80 order by score limit 5;
+
+select null;
+
+select cast_id, cast_name, count(cast_id) as movie_count 
+from moviecast 
+group by cast_name 
+having movie_count=3
+order by cast_name
+limit 5;
+
+select null;
+
+
+select distinct cast_id, cast_name, avg(score) as average_score
+from moviecast, movies
+where moviecast.movie_id=movies.id and movies.score>=1
+group by cast_id 
+having count(cast_id)>=3
+order by average_score desc, cast_name
+limit 10;
+
+select null;
+
+create view good_collaboration as
+select a.ci1 as cast1, a.ci2 as cast2, avg(a.score) as avgscore, count(a.mid) from(
+select m.id as mid,m.score as score,mc.ci1 as ci1, mc.ci2 as ci2 from movies as m inner join
+(select mc1.cast_id as ci1, mc2.cast_id as ci2, mc1.movie_id as mi
+from moviecast as mc1 cross join moviecast as mc2
+on mc1.movie_id=mc2.movie_id)mc
+on m.id=mc.mi
+where not mc.ci1=mc.ci2)a
+group by a.ci1,a.ci2
+having avg(a.score)>=75 and count(a.mid)>=3;
+
+select null;
+
+select * from
+(select g.cast1, m.cast_name, avg(g.avgscore)
+from good_collaboration as g inner join moviecast as m
+on g.cast1=m.cast_id
+group by g.cast1
+order by avg(avgscore) desc)id 
+limit 5;
+
+
+select null;
+
+
+.separator ","
+create virtual table movie_overview using fts3(id integer, name text, year integer, overview text, popularity decimal);
+.import E:/A+GTCLASS/CSE6242/Q3/movieoverview.txt movie_overview
+select count(overview) from movie_overview where overview match 'best OR worst';
+
+select null;
+
+select id from movie_overview where overview match 'life NEAR/10 about';
+
+

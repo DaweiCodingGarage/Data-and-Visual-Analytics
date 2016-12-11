@@ -1,0 +1,2 @@
+In the map phase, the code reads each line of the data, extract the ones we need.
+In the reduce phase, we combine the data with the same key, and reduce the answer to key, value pairs.

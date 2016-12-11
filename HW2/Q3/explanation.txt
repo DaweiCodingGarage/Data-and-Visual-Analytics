@@ -1,0 +1,3 @@
+I finished it using python. 
+Node: I first find out the players with the top 50 appearances, then extract corresponding data with only four required columns
+Links: find out the time range of players, and then evaluate each two's intersection, length of the intersection is the links.

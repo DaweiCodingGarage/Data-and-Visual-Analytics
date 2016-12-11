@@ -1,0 +1,5 @@
+In the Spark,
+Map phase, Spark processes one line at a time, extract the data we want. Then 
+Reduce phase, Spark reduces the data pairs by key.
+
+Compared with Hadoop, I think Spark using scala is easier, it is a language built upon Java, and it is simple to code as long as you are familiar with the syntax

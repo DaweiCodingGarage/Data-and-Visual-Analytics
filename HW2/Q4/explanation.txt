@@ -1,0 +1,2 @@
+c. square root scale is better because we could see that nodes with square root scale are easier to identify than those with linear scale, there is no overlap between the nodes.
+g. I set charge to -800 and linkdistance to 80 so as to make it more spread out and less clutter. Then I increase the font size of text to make it obvious.

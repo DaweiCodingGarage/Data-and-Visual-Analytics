@@ -1,0 +1,3 @@
+I use Fruchterman Reingold for my layout. 
+In ranking, under nodes, I choose degree and right-click on the panel to get a palette, choose three different colors.
+I rank the size based on Betweeness Centrality.

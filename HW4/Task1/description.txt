@@ -1,0 +1,14 @@
+A.
+My initial tree split the attributes based on median of the data, find the attributes with the biggest information gain in the tree and use it as the root, then do recursively to the branches to find out the root for those subtrees.
+The reason I chose my approach is that median is easy to compute and could divide the data into halves, so that each subtree tends to have similar number of levels, probably more accurate to predict with more levels.
+
+B.
+Accuracy for the initial tree is 78%
+
+C.
+Changes I made didn't significantly improve the accuracy. I tried several things: 1. because of number of recursion limit, I cannot reduce the tree to only one number on the last level, but could end up with 20 rather than 100 I used for the initial tree.
+2. I tried to change the way I split the attribute to random pick number to split. 3. I made multiple splits to split the data into three parts each recursion. I think the third change works the best. it is easier to understand, and could split trees in quick way.
+
+D.
+Accuracy improves to 78.36%
+

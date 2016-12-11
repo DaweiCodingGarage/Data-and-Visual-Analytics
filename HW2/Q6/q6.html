@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<body>
+  <script src="../lib/d3/d3.v3.min.js"></script>
+  <script src="../lib/d3/topojson.v1.min.js"></script>
+  <script src="../lib/d3/datamaps.world.min.js?v=1"></script>
+  <h2>Demographics of Refugees</h2>
+  <div id="container1" style="position: relative; width: 60%; max-height: 600px;"></div>
+
+        
+     <script>
+	 var zero=d3.format(",.1%")
+	 var ori=["Afghanistan","Eritrea","Gambia","Iran (Islamic Rep. of)","Iraq", "Mali","Russian Federation","Somalia","Serbia and Kosovo (S/RES/1244 (1999))","Syrian Arab Rep."];//,"Afghanistan","Eritrea","Gambia","Iran (Islamic Rep. of)","Iraq", "Mali","Russian Federation","Somalia","Serbia and Kosovo (S/RES/1244 (1999))","Syrian Arab Rep.","Afghanistan","Eritrea","Gambia","Iran (Islamic Rep. of)","Iraq", "Mali","Russian Federation","Somalia","Serbia and Kosovo (S/RES/1244 (1999))","Syrian Arab Rep.","Afghanistan","Eritrea","Gambia","Iran (Islamic Rep. of)","Iraq", "Mali","Russian Federation","Somalia","Serbia and Kosovo (S/RES/1244 (1999))","Syrian Arab Rep.","Afghanistan","Eritrea","Gambia","Iran (Islamic Rep. of)","Iraq", "Mali","Russian Federation","Somalia","Serbia and Kosovo (S/RES/1244 (1999))","Syrian Arab Rep."];
+	 var sum1=[[0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0]];
+	 d3.json("dem.json",function(data1){
+			data1.forEach(function(d){
+		     d.FTotal=+d.FTotal;
+			 d.MTotal=+d.MTotal;
+			 d.Female04=+d.Female04;
+			 d.Female511=+d.Female511;	
+			 d.Female1217=+d.Female1217;
+			 d.Female1859=+d.Female1859;
+			 d.Female60=+d.Female60;
+			 d.Male04=+d.Male04;
+			 d.Male511=+d.Male511;
+			 d.Male1217=+d.Male1217;
+			 d.Male1859=+d.Male1859;
+			 d.Male60=+d.Male60;
+			 d.Year=+d.Year;
+		
+			var ori=["Afghanistan","Eritrea","Gambia","Iran (Islamic Rep. of)","Iraq", "Mali","Russian Federation","Somalia","Serbia and Kosovo (S/RES/1244 (1999))","Syrian Arab Rep."];
+			 for(i=0;i<10;i++){
+				if(d.Country==ori[i]&& d.Year==2014){
+					sum1[i][0]=sum1[i][0]+d.Female04,
+					sum1[i][1]=sum1[i][1]+d.Female511,
+					sum1[i][2]=sum1[i][2]+d.Female1217,
+					sum1[i][3]=sum1[i][3]+d.Female1859,
+					sum1[i][4]=sum1[i][4]+d.Female60,
+					sum1[i][5]=sum1[i][5]+d.FTotal,
+					sum1[i][6]=sum1[i][6]+d.Male04,
+					sum1[i][7]=sum1[i][7]+d.Male511,
+					sum1[i][8]=sum1[i][8]+d.Male1217,
+					sum1[i][9]=sum1[i][9]+d.Male1859,
+					sum1[i][10]=sum1[i][10]+d.Male60,
+					sum1[i][11]=sum1[i][11]+d.MTotal;
+					}}
+	
+				})
+				
+				
+		ori=["Afghanistan","Eritrea","Gambia","Iran (Islamic Rep. of)","Iraq", "Mali","Russian Federation","Somalia","Serbia and Kosovo (S/RES/1244 (1999))","Syrian Arab Rep."];
+				
+		  data2 = [
+					{
+					  name: ori[0],
+					  FTotal: sum1[0][5],
+					  Female04:zero(sum1[0][0]/sum1[0][5]),
+					  Female511:zero(sum1[0][1]/sum1[0][5]),
+					  Female1217:zero(sum1[0][2]/sum1[0][5]),
+					  Female1859:zero(sum1[0][3]/sum1[0][5]),
+					  Female60:zero(sum1[0][4]/sum1[0][5]),
+					  MTotal:sum1[0][11],
+					  Male04:zero(sum1[0][6]/sum1[0][11]),
+					  Male511:zero(sum1[0][7]/sum1[0][11]),
+					  Male1217:zero(sum1[0][8]/sum1[0][11]),
+					  Male1859:zero(sum1[0][9]/sum1[0][11]),
+					  Male60:zero(sum1[0][10]/sum1[0][11]),
+					  latitude: 34.28,//Afghanistan
+					  longitude: 69.11,
+					  radius: 3
+					},
+					{
+					  name: ori[1],
+					  FTotal: sum1[1][5],
+					  Female04:zero(sum1[1][0]/sum1[1][5]),
+					  Female511:zero(sum1[1][1]/sum1[1][5]),
+					  Female1217:zero(sum1[1][2]/sum1[1][5]),
+					  Female1859:zero(sum1[1][3]/sum1[1][5]),
+					  Female60:zero(sum1[1][4]/sum1[1][5]),
+					  MTotal:zero(sum1[1][11]),
+					  Male04:zero(sum1[1][6]/sum1[1][11]),
+					  Male511:zero(sum1[1][7]/sum1[1][11]),
+					  Male1217:zero(sum1[1][8]/sum1[1][11]),
+					  Male1859:zero(sum1[1][9]/sum1[1][11]),
+					  Male60:sum1[1][10]/sum1[1][11],
+					   latitude: 15.19,
+						longitude: 38.55,
+					  radius: 3
+					},
+					{
+					  name: ori[2],
+					  FTotal: sum1[2][5],
+					  Female04:zero(sum1[2][0]/sum1[2][5]),
+					  Female511:zero(sum1[2][1]/sum1[2][5]),
+					  Female1217:zero(sum1[2][2]/sum1[2][5]),
+					  Female1859:zero(sum1[2][3]/sum1[2][5]),
+					  Female60:zero(sum1[2][4]/sum1[2][5]),
+					  MTotal:sum1[2][11],
+					  Male04:zero(sum1[2][6]/sum1[2][11]),
+					  Male511:zero(sum1[2][7]/sum1[2][11]),
+					  Male1217:zero(sum1[2][8]/sum1[2][11]),
+					  Male1859:zero(sum1[2][9]/sum1[2][11]),
+					  Male60:zero(sum1[2][10]/sum1[2][11]),
+					   latitude: 13.28,
+						longitude: -16.4,
+					  radius: 3//Gambia
+					},
+					{
+					  name: ori[3],
+					  FTotal: sum1[3][5],
+					  Female04:zero(sum1[3][0]/sum1[3][5]),
+					  Female511:zero(sum1[3][1]/sum1[3][5]),
+					  Female1217:zero(sum1[3][2]/sum1[3][5]),
+					  Female1859:zero(sum1[3][3]/sum1[3][5]),
+					  Female60:zero(sum1[3][4]/sum1[3][5]),
+					  MTotal:sum1[3][11],
+					  Male04:zero(sum1[3][6]/sum1[3][11]),
+					  Male511:zero(sum1[3][7]/sum1[3][11]),
+					  Male1217:zero(sum1[3][8]/sum1[3][11]),
+					  Male1859:zero(sum1[3][9]/sum1[3][11]),
+					  Male60:zero(sum1[3][10]/sum1[3][11]),
+					  latitude: 35.44,
+						longitude: 51.30,
+					  radius: 3//Iran (Islamic Rep. of)
+					},
+					{
+					  name: ori[4],
+					  FTotal: sum1[4][5],
+					  Female04:zero(sum1[4][0]/sum1[4][5]),
+					  Female511:zero(sum1[4][1]/sum1[4][5]),
+					  Female1217:zero(sum1[4][2]/sum1[4][5]),
+					  Female1859:zero(sum1[4][3]/sum1[4][5]),
+					  Female60:zero(sum1[4][4]/sum1[4][5]),
+					  MTotal:sum1[4][11],
+					  Male04:zero(sum1[4][6]/sum1[4][11]),
+					  Male511:zero(sum1[4][7]/sum1[4][11]),
+					  Male1217:zero(sum1[4][8]/sum1[4][11]),
+					  Male1859:zero(sum1[4][9]/sum1[4][11]),
+					  Male60:zero(sum1[4][10]/sum1[4][11]),
+					  latitude: 33.2,
+						longitude: 44.3,
+					  radius: 3//Iraq
+					},
+					{
+					  name: ori[5],
+					  FTotal: sum1[5][5],
+					  Female04:zero(sum1[5][0]/sum1[5][5]),
+					  Female511:zero(sum1[5][1]/sum1[5][5]),
+					  Female1217:zero(sum1[5][2]/sum1[5][5]),
+					  Female1859:zero(sum1[5][3]/sum1[5][5]),
+					  Female60:zero(sum1[5][4]/sum1[5][5]),
+					  MTotal:sum1[5][11],
+					  Male04:zero(sum1[5][6]/sum1[5][11]),
+					  Male511:zero(sum1[5][7]/sum1[5][11]),
+					  Male1217:zero(sum1[5][8]/sum1[5][11]),
+					  Male1859:zero(sum1[5][9]/sum1[5][11]),
+					  Male60:zero(sum1[5][10]/sum1[5][11]),
+					  latitude: 12.34,
+						longitude: -7.55,
+					  radius: 3//Mali
+					},
+					{
+					  name: ori[6],
+					  FTotal: sum1[6][5],
+					  Female04:sum1[6][0],
+					  Female511:sum1[6][1],
+					  Female1217:sum1[6][2],
+					  Female1859:sum1[6][3],
+					  Female60:sum1[6][4],
+					  MTotal:sum1[6][11],
+					  Male04:sum1[6][6],
+					  Male511:sum1[6][7],
+					  Male1217:sum1[6][8],
+					  Male1859:sum1[6][9],
+					  Male60:sum1[6][10],
+					   latitude: 55.45,
+						longitude: 37.35,
+					  radius: 3//Russia
+					},
+					{
+					  name: ori[7],
+					  FTotal: sum1[7][5],
+					  Female04:zero(sum1[7][0]/sum1[7][5]),
+					  Female511:zero(sum1[7][1]/sum1[7][5]),
+					  Female1217:zero(sum1[7][2]/sum1[7][5]),
+					  Female1859:zero(sum1[7][3]/sum1[7][5]),
+					  Female60:zero(sum1[7][4]/sum1[7][5]),
+					  MTotal:sum1[7][11],
+					  Male04:zero(sum1[7][6]/sum1[7][11]),
+					  Male511:zero(sum1[7][7]/sum1[7][11]),
+					  Male1217:zero(sum1[7][8]/sum1[7][11]),
+					  Male1859:zero(sum1[7][9]/sum1[7][11]),
+					  Male60:zero(sum1[7][10]/sum1[7][11]),
+					   latitude: 44,
+						longitude: 20,
+					  radius: 3//Serbia
+					},
+					{
+					  name: ori[8],
+					  FTotal: sum1[8][5],
+					  Female04:zero(sum1[8][0]/sum1[8][5]),
+					  Female511:zero(sum1[8][1]/sum1[8][5]),
+					  Female1217:zero(sum1[8][2]/sum1[8][5]),
+					  Female1859:zero(sum1[8][3]/sum1[8][5]),
+					  Female60:zero(sum1[8][4]/sum1[8][5]),
+					  MTotal:sum1[8][11],
+					  Male04:zero(sum1[8][6]/sum1[8][11]),
+					  Male511:zero(sum1[8][7]/sum1[8][11]),
+					  Male1217:zero(sum1[8][8]/sum1[8][11]),
+					  Male1859:zero(sum1[8][9]/sum1[8][11]),
+					  Male60:zero(sum1[8][10]/sum1[8][11]),
+					  latitude: 2.02,
+					longitude: 45.25,
+					  radius: 3//Somalia
+					},
+					{
+					  name: ori[9],
+					  FTotal: sum1[9][5],
+					  Female04:zero(sum1[9][0]/sum1[9][5]),
+					  Female511:zero(sum1[9][1]/sum1[9][5]),
+					  Female1217:zero(sum1[9][2]/sum1[9][5]),
+					  Female1859:zero(sum1[9][3]/sum1[9][5]),
+					  Female60:zero(sum1[9][4]/sum1[9][5]),
+					  MTotal:sum1[9][11],
+					  Male04:zero(sum1[9][6]/sum1[9][11]),
+					  Male511:zero(sum1[9][7]/sum1[9][11]),
+					  Male1217:zero(sum1[9][8]/sum1[9][11]),
+					  Male1859:zero(sum1[9][9]/sum1[9][11]),
+					  Male60:zero(sum1[9][10]/sum1[9][11]),
+					  latitude: 33.3,
+					longitude: 36.18,
+					  radius: 3//Syrian
+					}	
+				];
+			
+			
+       //basic map config with custom fills, mercator projection
+      var map = new Datamap({
+        scope: 'world',
+        element: document.getElementById('container1'),
+        projection: 'mercator',
+        height: 500,
+        fills: {
+          defaultFill: '#f0af0a',
+          lt50: 'rgba(0,244,244,0.9)',
+          gt50: 'red'
+        },
+        
+        data: {
+          AFG: {fillKey: 'gt50' },
+          ERI: {fillKey: 'gt50' },
+          GMB: {fillKey: 'gt50' },
+          IRN: {fillKey: 'gt50' },
+          IRQ: {fillKey: 'gt50'},
+          MLI: {fillKey: 'gt50' },
+          RUS: {fillKey: 'gt50' },
+          SOM: {fillKey: 'gt50' },
+          SRB: {fillKey: 'gt50' },
+		  KSV: {fillKey: 'gt50' },
+		  SYR: {fillKey: 'gt50' },
+		  DEU: {fillKey: 'lt50' },
+		  GBR: {fillKey: 'lt50' },
+		  DNK: {fillKey: 'lt50' },
+		  FRA: {fillKey: 'lt50' },
+		  SWE: {fillKey: 'lt50' },
+		  AUT: {fillKey: 'lt50' },
+		  FIN: {fillKey: 'lt50' },
+		  BEL: {fillKey: 'lt50' },
+		  HUN: {fillKey: 'lt50' },
+		  IRL: {fillKey: 'lt50' },
+		  NLD: {fillKey: 'lt50' },
+		  POL: {fillKey: 'lt50' },
+		  PRT: {fillKey: 'lt50' },
+		  ESP: {fillKey: 'lt50' }
+        }
+      })
+      
+var ori=["Afghanistan","Eritrea","Gambia","Iran (Islamic Rep. of)","Iraq", "Mali","Russian Federation","Somalia","Serbia and Kosovo (S/RES/1244 (1999))","Syrian Arab Rep."];
+      //sample of the arc plugin
+      map.arc([
+       {
+        origin: {
+            latitude: 34.28,//Afghanistan
+            longitude: 69.11
+        },
+        destination: {//Germany
+            latitude: 52.3,
+            longitude: 10
+        }
+      },
+	  {
+        origin: {
+             latitude: 15.19,
+            longitude: 38.55
+        },
+        destination: {
+           latitude: 59.2,
+            longitude: 16//Sweden
+        }
+      },
+	  {
+        origin: {
+            latitude: 13.28,
+            longitude: -16.4//Gambia
+        },
+        destination: {
+            latitude: 52.3,
+            longitude: 10
+        }
+      },
+	  {
+        origin: {
+            latitude: 35.44,
+            longitude: 51.30//Iran (Islamic Rep. of)
+        },
+        destination: {
+            latitude: 52.3,
+            longitude: 10
+        }
+      },
+	  {
+        origin: {
+            latitude: 33.2,
+            longitude: 44.3//Iraq
+        },
+        destination: {
+            latitude: 52.3,
+            longitude: 10
+        }
+      },
+	  {
+        origin: {
+            latitude: 12.34,
+            longitude: -7.55//Mali
+        },
+        destination: {
+            latitude: 48.5,
+            longitude: 2.2//France
+        }
+      },
+	  {
+        origin: {
+            latitude: 55.45,
+            longitude: 37.35//Russia
+        },
+        destination: {
+            latitude: 48.12,
+            longitude: 16.22//Austria
+        }
+      },
+	  {
+        origin: {
+            latitude: 44,
+            longitude: 20//Serbia
+        },
+        destination: {
+            latitude: 52.3,
+            longitude: 10
+        }
+      },
+	   {
+          origin: {
+               latitude: 2.02,
+            longitude: 45.25//Somalia
+          },
+          destination: {
+               latitude: 59.2,
+            longitude: 16//sweden
+          }
+      },
+	  {
+          origin: {
+               latitude: 33.3,
+            longitude: 36.18//Syrian
+          },
+          destination: {
+               latitude: 52.3,
+            longitude: 10
+          }
+      }
+      ], {strokeWidth: 1});
+       
+      
+       //bubbles, custom popup on hover template
+     map.bubbles(data2, {
+       popupTemplate: function(geo, d) {
+         return ["<div class='hoverinfo'>" + d.name,
+				 '<br/>Female Total: ' +  d.FTotal,
+				'<br/>Male Total: ' +  d.MTotal,
+				'<br/>Female 0-4 yrs old: ' +  d.Female04,
+				'<br/>Female 5-11 yrs old: ' +  d.Female511,
+				'<br/>Female 12-17 yrs old: ' +  d.Female1217,
+				'<br/>Female 18-59 yrs old:: ' +  d.Female1859,
+				'<br/>Female 60+ yrs old:: ' +  d.Female60,
+				'<br/>Male 0-4 yrs old: ' +  d.Male04,
+				'<br/>Male 5-11 yrs old: ' +  d.Male511,
+				'<br/>Male 12-17 yrs old: ' +  d.Male1217,
+				'<br/>Male 18-59 yrs old:: ' +  d.Male1859,
+				'<br/>Male 60+ yrs old:: ' +  d.Male60,
+				'</div>'];
+       }
+     });
+	 })
+	 
+	 
+     </script>
+</body>

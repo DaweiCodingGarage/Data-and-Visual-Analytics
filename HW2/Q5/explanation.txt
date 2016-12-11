@@ -1,0 +1,5 @@
+5.b I use pivot table in Excel to make the table between country and origin, in which I format them as a percentage of the total refugees.
+I bold the highest percentage each column. I align all the numbers in the middle.
+
+5.d In order to display more demographic attributes in the bar chart, I use each combination of age and gender as rows, country of origin as columns, each color representing a year. 
+If there are too many people falling into that catogory, bars turn to the same color. In this way, we could see whether there are some relationships among age,gender,country, and time.
